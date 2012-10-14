@@ -1,0 +1,16 @@
+/* This file will have a error in it after a few lines for a scaner test*/
+
+main()
+{
+ int x;
+ int y;
+ int z;
+ x=30;
+ y=50;
+ z=x+y;
+ if (z && y == 0)
+ {
+  doSomething();
+ }
+ }
+ 

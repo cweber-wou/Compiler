@@ -1,0 +1,340 @@
+
+/* 10
+100
+1000
+10000
+32
+128
+*/
+!=
+
+Keywords else if int return void while
+Special symbols + - * / < <= > >= == != = ; , ( ) [ ] { } /* */
+*
+ID = letter letter
+*
+NUM = digit digit
+letter = a    z  A    Z
+digit = 0    9
+Comments /*  */
+
+reader 
+char peek() for two symbol things <= == /*
+void advance() get next with no return
+
+class token
+int constant identifing the token
+string lexeme (Identifyer of the identifer)
+int number 
+int line number 
+
+/* */ comments while get!=*  peak = / 
+number till not number
+id till not letter
+
+Use underscore and other non language sysmbols for erros 
+
+helpfull java
+is digit
+is letter
+is whitespace
+
+
+
+
+include "globalsh"
+include "utilh"
+include "scanh"
+include <stdioh>
+extern FILE* source;
+extern int  EchoSource;
+typedef enum
+{START,INCOMMENT,INNUM,INID,DONE} StateType;
+
+char tokenString[MAXTOKENLEN+1];
+
+#define BUFLEN 256
+int lineno = 0;
+static char lineBuf[BUFLEN];
+static int linepos = 0;
+static int bufsize = 0;
+
+static void ungetNextChar(void)
+{linepos--;}
+
+static struct
+{
+	char* str;
+	TokenType tok;
+}reservedWords[MAXRESERVED]={{"if",IF},{"int",INT},
+{"else",ELSE},{"return",RETURN},{"void",VOID},
+{"while",WHILE}};
+
+
+static TokenType reservedLookup(char *s)
+{
+	int i;
+	for(i=0;i<MAXRESERVED;i++)
+		if(!strcmp(s,reservedWords[i]str))
+			return reservedWords[i]tok;
+	return ID;
+}	
+
+
+static char getNextChar(void)
+{
+    if(!lineno)
+	{
+		lineno++;
+		if(fgets(lineBuf,BUFLEN-1,source))
+		{
+			if(EchoSource) 
+			{
+				fprintf(listing,"line %d %s\n",lineno,lineBuf);
+			}
+			bufsize = strlen(lineBuf);
+			linepos = 0;
+			return lineBuf[linepos++];
+		}
+		else { linepos++; return EOF;}
+	}
+	else if(!(linepos < bufsize)lineBuf[linepos-1]==10)//每一行都以\n结束，最后以行例外
+	{
+		lineno++;
+		if(fgets(lineBuf,BUFLEN-1,source))
+		{
+			if(EchoSource) 
+			{
+				fprintf(listing,"line %d %s\n",lineno,lineBuf);
+			}
+			bufsize = strlen(lineBuf);
+			linepos = 0;
+			return lineBuf[linepos++];
+		}
+		else { linepos++; return EOF;}
+	}	
+	else if(!(linepos < bufsize))
+		return EOF;
+	else 
+		return lineBuf[linepos++];
+}
+
+TokenType getToken(void)
+{
+	int tokenStringIndex=0;
+	TokenType currentToken;
+	StateType state=START;
+	int save;
+	char c;
+	while(state!=DONE)
+	{
+		save=TRUE;
+		c=getNextChar();
+		switch(state)
+		{
+		case START
+			if(isdigit(c))
+				state=INNUM;
+			else if(isalpha(c))
+				state=INID;
+			else if((c==' ')(c=='\t')(c=='\n'))
+				save=FALSE;
+			else if(c=='/')
+			{
+				c=getNextChar();
+				if(c=='*')
+				{
+					save=FALSE;
+					state=INCOMMENT;
+				}
+				else
+				{
+					currentToken=OVER;
+					state=DONE;
+					ungetNextChar();
+				}
+			}
+			else if(c=='<')
+			{
+				state=DONE;
+				tokenString[tokenStringIndex++]=c;
+				c=getNextChar();
+				if(c=='=')
+				{
+				    currentToken=LTOREQ;
+				}
+				else
+				{
+					save=FALSE;
+					currentToken=LT;
+					ungetNextChar();
+				}
+			}
+			else if(c=='>')
+			{
+				state=DONE;
+				tokenString[tokenStringIndex++]=c;
+				c=getNextChar();
+				
+				if(c=='=')
+				{
+				    currentToken=BIOREQ;
+					
+				//	c=next;
+				}
+				else
+				{
+					//flag=1;//预取了一个字符
+				//	tokenString[tokenStringIndex++]=c;
+				//	c=next;
+					currentToken=BI;
+					save=FALSE;
+					ungetNextChar();
+				}
+			//	next=c;
+			}
+			else if(c=='=')
+			{
+				state=DONE;
+				c=getNextChar();
+				if(c=='=')
+				{
+				    currentToken=EQ;
+				}
+				else
+				{
+					currentToken=ASSIGN;
+					save=FALSE;
+					ungetNextChar();
+				}
+			}
+			else if(c=='!')
+			{
+				state=DONE;
+				c=getNextChar();
+				if(c=='=')
+				{
+				    currentToken=NEQ;
+				//	tokenString[tokenStringIndex++]=c;
+				//	c=next;
+				}
+				else
+				{
+				//	flag=1;//预取了一个字符	
+				//	tokenString[tokenStringIndex++]=c;
+				//	c=next;
+					currentToken=ERROR;
+					save=FALSE;
+					ungetNextChar();
+				}
+			}
+			else
+			{
+				state=DONE;
+				switch(c)
+				{
+				case EOF
+					save=FALSE;
+					currentToken=ENDFILE;
+					break;
+				case '+'
+					currentToken=PLUS;
+					break;
+				case '-'
+					currentToken=MINUS;
+					break;
+				case '('
+					currentToken=LROUNDBRA;
+					break;
+				case ')'
+					currentToken=RROUNDBRA;
+					break;
+				case '['
+					currentToken=LSQUARPAREN;
+					break;
+				case ']'
+					currentToken=RSQUARPAREN;
+					break;
+				case '{'
+					currentToken=LBRAC;
+					break;
+				case '}'
+					currentToken=RBRAC;
+					break;
+				case ';'
+					currentToken=SEMI;
+					break;
+				case ','
+					currentToken=COMA;
+					break;
+				case '*'
+					currentToken=TIMES;
+					break;
+				default
+					currentToken=ERROR;
+					break;
+				}
+			}
+			break;
+		case INCOMMENT
+			save=FALSE;
+			if(c=='*')
+			{
+				c=getNextChar();
+				if(c=='/')
+				{
+					state=START;
+				}
+				else
+				{
+					//flag=1;//预取了一个字符	
+				//	c=next;
+					ungetNextChar();
+				}
+			}
+			break;
+		case INNUM
+			if(!isdigit(c))
+			{
+			//	flag=1;
+				save=FALSE;
+				state=DONE;
+				currentToken=NUM;
+				ungetNextChar();
+			}
+			break;
+		case INID
+			if(!isalpha(c))
+			{
+			//	flag=1;
+				save=FALSE;
+				state=DONE;
+				currentToken=ID;
+				ungetNextChar();
+
+			}
+			break;
+		case DONE
+		default
+			fprintf(listing,"Scanner bugstate=%d\n",state);
+			state=DONE;
+			currentToken=ERROR;
+			break;
+		}
+		if((save)(tokenStringIndex<=MAXTOKENLEN))
+			tokenString[tokenStringIndex++]=c;
+		if(state == DONE)
+		{
+			tokenString[tokenStringIndex] = '\0';
+			if(currentToken == ID)
+				currentToken = reservedLookup(tokenString);
+		}
+	}//循环结束
+	if(TraceScan)
+	{
+		fprintf(listing,"%d\n",lineno);
+		printToken(currentToken,tokenString);
+	}
+	return currentToken;
+}
+
