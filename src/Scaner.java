@@ -135,14 +135,14 @@ public class Scaner {
 			case '{':
 				t.lexeme=Character.toString(c);
 				t.lineNumber=f.getLine();
-				t.id=Constants.RBRACE;
+				t.id=Constants.LBRACE;
 				t.number=0;
 				f.next();
 				break;
 			case '}':
 				t.lexeme=Character.toString(c);
 				t.lineNumber=f.getLine();
-				t.id=Constants.LBRACE;
+				t.id=Constants.RBRACE;
 				t.number=0;
 				f.next();
 				break;
