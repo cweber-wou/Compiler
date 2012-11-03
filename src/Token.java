@@ -8,8 +8,9 @@ public class Token {
 		String out = new String();
 		String id = new String();
 		id = Constants.getSting(this.id);
-		out = id + " " + this.lexeme + " " + this.number + " "
-				+ this.lineNumber;
+		//out = id + " " + this.lexeme + " " + this.number + " "+ this.lineNumber;
+		out=this.lineNumber+": Lexeme: "+this.lexeme+" -> NodeType: "+id;
+		if (this.id == Constants.NUMBER) out+=" : "+this.number;
 		return out;
 	}
 }

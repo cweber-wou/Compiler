@@ -165,7 +165,7 @@ public class Scaner {
 				{
 					t.lexeme=Character.toString(c)+f.getPeek();
 					t.lineNumber=f.getLine();
-					t.id=Constants.ASSIGN;
+					t.id=Constants.EQ;
 					t.number=0;
 					f.next();
 					f.next();
@@ -174,7 +174,7 @@ public class Scaner {
 				{
 					t.lexeme=Character.toString(c);
 					t.lineNumber=f.getLine();
-					t.id=Constants.EQ;
+					t.id=Constants.ASSIGN;
 					t.number=0;
 					f.next();
 				}

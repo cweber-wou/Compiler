@@ -8,8 +8,23 @@ void main(void)
  int x;
  int y;
  int z;
- /*while
+ while
  if 
+ <=
+ >=
+ !=
+ >
+ <
+ +
+ -
+ *
+ /
+ {
+ }
+ [
+ ]
+ (
+ )
  return
  void
  read
@@ -18,9 +33,10 @@ void main(void)
  x=30;
  y=50;
  z=x+y;
- /*if (z y == 0)
+ if (z y == 0)
  {
   doSomething();
- }*/
+ }
+ _
  }
  
