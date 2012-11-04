@@ -4,17 +4,20 @@ import java.io.IOException;
 public class Scaner {
 	private StreamReader f;
 	private SymbolTable keyword;
+	public Token peek;
 	
 	
 	public Scaner (String fileName)
 	{
 		f= new StreamReader (fileName);
 		keyword= new SymbolTable();
+		this.next();
 	}
 	
 	public Token next()
 	{
 		Token t= new Token();
+		Token x;
 		char c=f.getCurent();
 		while ((Character.isWhitespace(c)) && ((char) -1 != c))
 		{
@@ -254,7 +257,9 @@ public class Scaner {
 				break;
 			}
 		}
-		return t;
+		x=peek;
+		peek=t;
+		return x;
 	}
 	public static void main( String [] args ) throws IOException
 	{

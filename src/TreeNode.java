@@ -28,7 +28,7 @@ public class TreeNode {
 		
 	}
 	
-	public String ToString()
+	public String ToString(int level)
 	{
 		String o = new String();
 		String t = "\n";
@@ -36,10 +36,12 @@ public class TreeNode {
 		{
 			t=t+"\t";
 		}
-		o=t+"Line: "+lineNumber;
-		o+=t+"sValue: "+sValue;
-		if (nodeType == Constants.NUMBER) o+=t+"NumberValue: "+nValue;
 		o+=t+"Node Type: "+Constants.getSting(nodeType);
+		o+=t+"Line: "+lineNumber;
+		
+		o+=t+"Name: "+sValue;
+		if (nodeType == Constants.NUMBER|| nodeType == Constants.ARRAY) o+=t+"NumberValue: "+nValue;
+		
 		o+=t+"Rename: "+rename;
 		return o;
 		
@@ -56,7 +58,7 @@ public class TreeNode {
 	   for (int i=0; i<10;i++)
 	   {
 		   x.level=i;
-		   System.out.println(x.ToString());   
+		   System.out.println(x.ToString(i));   
 	   }
 	   
 	   
