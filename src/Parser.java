@@ -500,21 +500,19 @@ public class Parser {
 								}
 								
 								return tmp;
-		default:
-			switch (t.id)
-			{
+		
 			case Constants.EQ: 
 			case Constants.LEQ:
 			case Constants.LS:
 			case Constants.GEQ:
 			case Constants.GT:
 			case Constants.NEQ:
-				tmp=SimpleExpresion();
+			tmp=SimpleExpresion();
 				tmp.C1=tmp2;
 				return tmp;
-			default: break;
+			default:tmp=tmp2; return tmp;
 			
-			}break;
+			
 								
 
 		//default:throw new IllegalStateException("ID Missing Asignment or Parameters  Token: "+t.toString());	
@@ -528,7 +526,38 @@ public class Parser {
 	private TreeNode Call()
 	{
 		TreeNode tmp=new TreeNode();
+		tmp.nodeType=Constants.CALL;
 		
+		tmp.C1=Arguments();
+		return tmp;
+	}
+	
+	private TreeNode Arguments()
+	{
+		TreeNode tmp=new TreeNode();
+		TreeNode c=tmp;
+		tmp.nodeType=Constants.ARGUMENTS;
+		
+		while (t.id!= Constants.RPAREN)
+		{
+			next(); //consume ( or ,
+			c.sibling=Argument();
+			c=c.sibling;
+			if (t.id!=Constants.COMMA&&t.id!=Constants.RPAREN) throw new IllegalStateException("Missign Comma in Argument list Token: "+t.toString());
+		}
+		next(); // consume )
+		return tmp;
+	}
+	
+	private TreeNode Argument()
+	{
+		TreeNode tmp=new TreeNode();
+		switch (t.id)
+		{
+		case Constants.ID: tmp=Variable(); break;
+		case Constants.NUMBER: tmp.lineNumber=t.lineNumber; tmp.nValue=t.number; tmp.nodeType=t.id; tmp.sValue=t.lexeme; next();break;
+		default: throw new IllegalStateException("unexpected Token in argument Token: "+t.toString());
+		}
 		return tmp;
 	}
 	
