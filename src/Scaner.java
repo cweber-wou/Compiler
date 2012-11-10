@@ -1,5 +1,5 @@
 import java.io.IOException;
-
+import java.util.Scanner;
 
 public class Scaner {
 	private StreamReader f;
@@ -263,7 +263,11 @@ public class Scaner {
 	}
 	public static void main( String [] args ) throws IOException
 	{
-		Scaner x=new Scaner("test");
+		Scanner in = new Scanner (System.in);
+		System.out.print("Input File Name for Scaner: ");
+		String infile= in.nextLine();
+		Scaner x=new Scaner(infile);
+		
 		Token t;
 		t=x.next();
 		

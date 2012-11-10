@@ -17,13 +17,7 @@ public class Parser {
 		next();
 	}
 	
-	private void Match(int type)
-	{
-		if (current.typeSpecifier!=type)
-		{
-			//error
-		}
-	}
+	
 	
 	private void next()
 	{
