@@ -164,9 +164,11 @@ public class Parser {
 		tmp.lineNumber=t.lineNumber;
 		
 		if (t.id==Constants.VOID) {
+			tmp.typeSpecifier=Constants.VOID;
 			next();		
 		}
 		else {
+			tmp.typeSpecifier=Constants.INT;
 			while (t.id!=Constants.RPAREN)
 			{
 				
@@ -553,7 +555,7 @@ public class Parser {
 		{
 		case Constants.ID: tmp=Variable(); break;
 		case Constants.NUMBER: tmp.lineNumber=t.lineNumber; tmp.nValue=t.number; tmp.nodeType=t.id; tmp.sValue=t.lexeme; next();break;
-		default: throw new IllegalStateException("unexpected Token in argument Token: "+t.toString());
+		//default: throw new IllegalStateException("unexpected Token in argument Token: "+t.toString());
 		}
 		return tmp;
 	}

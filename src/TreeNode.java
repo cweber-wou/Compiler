@@ -27,8 +27,21 @@ public class TreeNode {
 		this.nodeType=in.id;
 		
 	}
-	
-	public String ToString(int level)
+	public String toString()
+	{
+		String o = new String();
+		
+		o+=" Node Type: "+Constants.getSting(nodeType);
+		o+=" Line: "+lineNumber;
+		
+		o+=" Name: "+sValue;
+		if (nodeType == Constants.NUMBER|| nodeType == Constants.ARRAY) o+=" NumberValue: "+nValue;
+		
+		o+=" Rename: "+rename;
+		return o;
+		
+	}
+	public String toString(int level)
 	{
 		String o = new String();
 		String t = "\n";
@@ -58,7 +71,7 @@ public class TreeNode {
 	   for (int i=0; i<10;i++)
 	   {
 		   x.level=i;
-		   System.out.println(x.ToString(i));   
+		   System.out.println(x.toString(i));   
 	   }
 	   
 	   
