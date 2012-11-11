@@ -17,7 +17,10 @@ public class Parser {
 		next();
 	}
 	
-	
+	public void start()
+	{
+		root=Program();
+	}
 	
 	private void next()
 	{

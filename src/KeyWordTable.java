@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 
-public class SymbolTable {
+public class KeyWordTable {
 	
 	private HashMap<String, Integer> table = new HashMap<String, Integer>();
 	
@@ -39,14 +39,14 @@ public class SymbolTable {
 		
 	}
 	
-	public SymbolTable()
+	public KeyWordTable()
 	{
 		keywords();
 	}
 	
 	
 	public static void main(String[] args) {
-		SymbolTable x = new SymbolTable();
+		KeyWordTable x = new KeyWordTable();
 		System.out.println(x.pull("if"));
 		System.out.println(x.pull("else"));
 		System.out.println(x.pull("write"));

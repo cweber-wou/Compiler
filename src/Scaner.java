@@ -3,14 +3,14 @@ import java.util.Scanner;
 
 public class Scaner {
 	private StreamReader f;
-	private SymbolTable keyword;
+	private KeyWordTable keyword;
 	public Token peek;
 	
 	
 	public Scaner (String fileName)
 	{
 		f= new StreamReader (fileName);
-		keyword= new SymbolTable();
+		keyword= new KeyWordTable();
 		this.next();
 	}
 	
