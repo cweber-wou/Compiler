@@ -80,7 +80,7 @@ public class Checker {
 				Symbol f=new Symbol(t); 
 				
 				s= st.get(f);
-				if (s==null) System.out.println("Varible not found: "+t.toString()); 
+				if (s==null) System.out.println("Varible not found: "+t.toString()); else System.out.println("Lookup Sucess "+s.toString());
 			}
 
 		default:
