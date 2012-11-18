@@ -50,6 +50,7 @@ void sort (int a[], int low, int high) {
 	while (i<10) {
  		write (x[i]);
  		i=i+1;
+ 		i=i*2+(3+5)*6;
  	}
  }
     
