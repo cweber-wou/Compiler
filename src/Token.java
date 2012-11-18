@@ -1,4 +1,7 @@
 public class Token {
+	/*
+	 * Name: Chris Weber Date: fall2012 Class: compiler Design
+	 */
 	public int id;
 	public String lexeme;
 	public int lineNumber;

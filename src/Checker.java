@@ -1,6 +1,8 @@
 import java.util.Collection;
 import java.util.Iterator;
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 public class Checker {
 
 	public Parser p;

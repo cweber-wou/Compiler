@@ -1,6 +1,8 @@
 
 public class AST {
-
+	/*
+	 * Name: Chris Weber Date: fall2012 Class: compiler Design
+	 */
 	/**
 	 * @param args
 	 */

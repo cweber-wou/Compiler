@@ -1,5 +1,7 @@
 import java.util.Scanner;
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 public class Parser {
 
 	public TreeNode root;

@@ -1,6 +1,8 @@
 
 public class Navi {
-
+	/*
+	 * Name: Chris Weber Date: fall2012 Class: compiler Design
+	 */
 	int level = 0;
 	
 	void preorder (TreeNode root)

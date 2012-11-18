@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.Scanner;
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 public class Scaner {
 	private StreamReader f;
 	private KeyWordTable keyword;

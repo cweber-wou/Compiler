@@ -1,4 +1,6 @@
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 public class TreeNode {
 	public int lineNumber;
 	public int nValue;

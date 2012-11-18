@@ -1,4 +1,7 @@
 public class Symbol {
+	/*
+	 * Name: Chris Weber Date: fall2012 Class: compiler Design
+	 */
 	public String ID;
 	public int entryType;
 	public int dataType;

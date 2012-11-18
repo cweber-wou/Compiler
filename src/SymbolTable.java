@@ -2,7 +2,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 
 public class SymbolTable {
 	public HashMap<String, Symbol> table = new HashMap<String, Symbol>();

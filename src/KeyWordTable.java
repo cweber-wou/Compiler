@@ -1,5 +1,7 @@
 import java.util.HashMap;
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 
 public class KeyWordTable {
 	

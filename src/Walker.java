@@ -1,6 +1,8 @@
 import java.util.LinkedList;
 import java.util.ListIterator;
-
+/*
+ * Name: Chris Weber Date: fall2012 Class: compiler Design
+ */
 //used in checker to walk the tree uses C1,C2,C3,Sibling walk order
 public class Walker {
 
