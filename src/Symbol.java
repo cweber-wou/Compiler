@@ -11,6 +11,7 @@ public class Symbol {
 	public int arrayMax;
 	public String rename;
 	public int line;
+	public int value;
 
 	public String toString()
 	{
@@ -41,6 +42,7 @@ public class Symbol {
 		dataType = t.typeSpecifier;
 		blockLevel = t.level;
 		line=t.lineNumber;
+		rename=t.rename;
 		switch (t.nodeType) {
 		case Constants.FUNCTION:
 			rename=t.sValue;

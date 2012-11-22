@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Set;
+
 /*
  * Name: Chris Weber Date: fall2012 Class: compiler Design
  */
@@ -22,17 +22,36 @@ public class SymbolTable {
 		
 		return table.get(s.rename);
 	}
+	public int Remove (int level)
+	{
+		int out=0;
+		Iterator<Entry<String, Symbol>> x = table.entrySet().iterator();
+		while (x.hasNext())
+		{
+			Entry<String, Symbol> y = x.next();
+			if (y.getValue().blockLevel== level)
+			{
+				x.remove();
+				out++;
+			}
+			
+		}
+		return out;
+	}
 	public Symbol get (Symbol find)
 	{
 			String f, c;
 			f=find.ID;
 			Iterator<Entry<String, Symbol>> x = table.entrySet().iterator();
+			for (int n =find.blockLevel+1;n>-1;n--){
 			while (x.hasNext())
 			{
 				Entry<String, Symbol> y = x.next();
 				c=y.getValue().ID;
-				if (c.compareTo(f)==0) return y.getValue();
+				if (c.compareTo(f)==0 && y.getValue().blockLevel == n) return y.getValue();
 				
+			}
+			x = table.entrySet().iterator();
 			}
 			return null;
 		

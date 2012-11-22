@@ -12,7 +12,7 @@ public class Token {
 		String id = new String();
 		id = Constants.getSting(this.id);
 		//out = id + " " + this.lexeme + " " + this.number + " "+ this.lineNumber;
-		out=this.lineNumber+": Lexeme: "+this.lexeme+" -> NodeType: "+id;
+		out="Line "+this.lineNumber+": Lexeme: "+this.lexeme+" -> NodeType: "+id;
 		if (this.id == Constants.NUMBER) out+=" : "+this.number;
 		return out;
 	}

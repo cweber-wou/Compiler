@@ -38,7 +38,7 @@ public class Parser {
 		tmp.level = 0;
 		tmp.sibling = DeclarationList();
 		if (t.id != Constants.EOF) {
-			throw new IllegalStateException("EOF not Reached token: "
+			throw new IllegalStateException("EOF not Reached Found Token =  "
 					+ t.toString());
 		}
 		return tmp;
@@ -61,9 +61,9 @@ public class Parser {
 		case Constants.INT:
 			next();
 			return Constants.INT;
-		default:
-			throw new IllegalStateException("Invalid Varible Type token: "
-					+ t.toString());
+		default: return 0;
+//			throw new IllegalStateException("Invalid Varible Type Found Token =  "
+//					+ t.toString());
 		}
 	}
 
@@ -77,7 +77,7 @@ public class Parser {
 			l = t.lexeme;
 			next();
 		} else
-			throw new IllegalStateException("Missing Varible ID token: "
+			throw new IllegalStateException("Missing Varible ID Found Token =  "
 					+ t.toString());
 		switch (t.id) {
 		case Constants.LPAREN:
@@ -85,15 +85,16 @@ public class Parser {
 			break;
 		case Constants.LBRACKET:
 			tmp = ArrayDeclaration();
+			next();//consume semi
 			break;
 		case Constants.SEMI:
 			tmp = new TreeNode();
 			tmp.nodeType = Constants.VARIABLE;
-
+			next();//consume semi
 			break;
 		default:
 			throw new IllegalStateException(
-					"Missing Semi Colon, Array set, or FunctionParams Token: "
+					"Missing Semi Colon, Array set, or FunctionParams Found Token =  "
 							+ t.toString());
 
 		}
@@ -115,7 +116,7 @@ public class Parser {
 			l = t.lexeme;
 			next();
 		} else
-			throw new IllegalStateException("Missing Varible ID token: "
+			throw new IllegalStateException("Missing Varible ID Found Token =  "
 					+ t.toString());
 		switch (t.id) {
 
@@ -128,37 +129,37 @@ public class Parser {
 			break;
 		default:
 			throw new IllegalStateException(
-					"Missing Semi Colon, Array set Token: " + t.toString());
+					"Missing Semi Colon, Array set Found Token =  " + t.toString());
 
 		}
 		tmp.typeSpecifier = type;
 		tmp.lineNumber = line;
 		tmp.sValue = l;
 		tmp.level = level;
-		next();
+		next();//consume semi
 		return tmp;
 	}
 
 	private TreeNode ArrayDeclaration() {
 		TreeNode tmp = new TreeNode();
 		tmp.nodeType = Constants.ARRAY;
-		next();
+		next(); //consume [
 		if (t.id == Constants.NUMBER)
 			tmp.nValue = t.number;
 		else
 			throw new IllegalStateException(
-					"Missing number in Array Declaration Token: "
+					"Missing number in Array Declaration Found Token =  "
 							+ t.toString());
-		next();
+		next();//consume number
 		if (t.id != Constants.RBRACKET)
 			throw new IllegalStateException(
-					"Missing Right Bracket in Array Declration Token: "
+					"Missing Right Bracket in Array Declration Found Token =  "
 							+ t.toString());
-		next();
-		if (t.id != Constants.SEMI)
-			throw new IllegalStateException("Missing Semi Colon Token: "
-					+ t.toString());
-		next();
+		next();//consume ]
+//		if (t.id != Constants.SEMI)
+//			throw new IllegalStateException("Missing Semi Colon Found Token =  "
+//					+ t.toString());
+//		next();
 		return tmp;
 	}
 
@@ -191,7 +192,7 @@ public class Parser {
 				if (t.id != Constants.RPAREN)
 					if (t.id != Constants.COMMA)
 						throw new IllegalStateException(
-								"Missing Comma in Parameter List Token: "
+								"Missing Comma in Parameter List Found Token =  "
 										+ t.toString());
 					else
 						next();
@@ -201,7 +202,7 @@ public class Parser {
 		level--;
 		if (t.id != Constants.RPAREN)
 			throw new IllegalStateException(
-					"Missing Right Paran in Parameter List Token: "
+					"Missing Right Paran in Parameter List Found Token =  "
 							+ t.toString());
 		next();
 		return tmp;
@@ -217,7 +218,7 @@ public class Parser {
 			l = t.lexeme;
 			next();
 		} else
-			throw new IllegalStateException("Missing Varible ID token: "
+			throw new IllegalStateException("Missing Varible ID Found Token =  "
 					+ t.toString());
 		switch (t.id) {
 
@@ -259,7 +260,7 @@ public class Parser {
 		tmp.lineNumber = t.lineNumber;
 		if (t.id != Constants.LBRACE)
 			throw new IllegalStateException(
-					"Missing Left Brace in Compound Statement Token: "
+					"Missing Left Brace in Compound Statement Found Token =  "
 							+ t.toString());
 
 		next();
@@ -269,7 +270,7 @@ public class Parser {
 		level--;
 		if (t.id != Constants.RBRACE)
 			throw new IllegalStateException(
-					"Missing Right Brace in Compound Statement Token: "
+					"Missing Right Brace in Compound Statement Found Token =  "
 							+ t.toString());
 		next();
 		return tmp;
@@ -328,7 +329,7 @@ public class Parser {
 			tmp = Compound();
 			break;
 		default:
-			throw new IllegalStateException("Unknown Statement  Token: "
+			throw new IllegalStateException("Unknown Statement  Found Token =  "
 					+ t.toString());
 		}
 		tmp.lineNumber = line;
@@ -353,7 +354,7 @@ public class Parser {
 		case Constants.SEMI:
 			return tmp;
 			// default: throw new
-			// IllegalStateException("Unexpected Token in Simple Expresion Token: "+t.toString());
+			// IllegalStateException("Unexpected Token in Simple Expresion Found Token =  "+t.toString());
 		}
 
 		return tmp;
@@ -374,7 +375,7 @@ public class Parser {
 			break;
 		default:
 			throw new IllegalStateException(
-					"Missing Relational Operator Token: " + t.toString());
+					"Missing Relational Operator Found Token =  " + t.toString());
 		}
 		next();
 
@@ -459,7 +460,7 @@ public class Parser {
 			next();
 			tmp = Expresion();
 			if (t.id != Constants.RPAREN)
-				throw new IllegalStateException("Missing Right Paren Token: "
+				throw new IllegalStateException("Missing Right Paren Found Token =  "
 						+ t.toString());
 			next();
 			break;
@@ -498,7 +499,7 @@ public class Parser {
 			tmp.C1 = Expresion();
 			if (t.id != Constants.RBRACKET)
 				throw new IllegalStateException(
-						"Missign Right Backet in Array Token: " + t.toString());
+						"Missign Right Backet in Array Found Token =  " + t.toString());
 			next();
 			tmp.nodeType = Constants.ARRAY;
 		}
@@ -516,12 +517,12 @@ public class Parser {
 		next(); // consume while
 		if (t.id != Constants.LPAREN)
 			throw new IllegalStateException(
-					"Missing Left Paren in while  Token: " + t.toString());
+					"Missing Left Paren in while  Found Token =  " + t.toString());
 		next(); // consume (
 		tmp.C1 = Expresion();
 		if (t.id != Constants.RPAREN)
 			throw new IllegalStateException(
-					"Missing Right Paren in while  Token: " + t.toString());
+					"Missing Right Paren in while  Found Token =  " + t.toString());
 		next(); // consume )
 		tmp.C2 = Statement();
 		tmp.nodeType = Constants.WHILE;
@@ -532,13 +533,13 @@ public class Parser {
 		TreeNode tmp = new TreeNode();
 		next(); // consume if
 		if (t.id != Constants.LPAREN)
-			throw new IllegalStateException("Missing Left Paren in If  Token: "
+			throw new IllegalStateException("Missing Left Paren in If  Found Token =  "
 					+ t.toString());
 		next(); // consume (
 		tmp.C1 = Expresion();
 		if (t.id != Constants.RPAREN)
 			throw new IllegalStateException(
-					"Missing Right Paren in If  Token: " + t.toString());
+					"Missing Right Paren in If  Found Token =  " + t.toString());
 		next(); // consume )
 		tmp.C2 = Statement();
 		if (t.id == Constants.ELSE) {
@@ -555,7 +556,7 @@ public class Parser {
 		next();// consumer write
 		tmp.C1 = Expresion();
 		if (t.id != Constants.SEMI)
-			throw new IllegalStateException("Missing ; after write  Token: "
+			throw new IllegalStateException("Missing ; after write  Found Token =  "
 					+ t.toString());
 		next();
 		return tmp;
@@ -567,7 +568,7 @@ public class Parser {
 		next();// consume read
 		tmp.C1 = Variable();
 		if (t.id != Constants.SEMI)
-			throw new IllegalStateException("Missing ; after read  Token: "
+			throw new IllegalStateException("Missing ; after read  Found Token =  "
 					+ t.toString());
 		next();
 		return tmp;
@@ -579,7 +580,7 @@ public class Parser {
 		tmp.nodeType = Constants.RETURN;
 		tmp.C1 = Expresion();
 		if (t.id != Constants.SEMI)
-			throw new IllegalStateException("Missing ; after return  Token: "
+			throw new IllegalStateException("Missing ; after return  Found Token =  "
 					+ t.toString());
 		next();
 		return tmp;
@@ -589,7 +590,7 @@ public class Parser {
 		TreeNode tmp = Expresion();
 		if (t.id != Constants.SEMI)
 			throw new IllegalStateException(
-					"Missign Semi in Expression Token: " + t.toString());
+					"Missign Semi in Expression Found Token =  " + t.toString());
 		next();
 		return tmp;
 	}
@@ -601,13 +602,7 @@ public class Parser {
 				&& (scan.peek.id == Constants.ASSIGN || scan.peek.id == Constants.LBRACKET)) {
 			tmp2 = Variable();// call, var
 			switch (t.id) {
-			/*
-			 * case Constants.LPAREN: tmp=Call(); tmp.lineNumber=t.lineNumber;
-			 * tmp.sValue=tmp2.sValue; if (t.id==Constants.SEMI)return tmp; else
-			 * throw new
-			 * IllegalStateException("No Semi Collon after Function call Token: "
-			 * +t.toString());
-			 */
+			
 
 			case Constants.ASSIGN:
 				tmp = Assignment();
@@ -636,11 +631,10 @@ public class Parser {
 				tmp = tmp2;
 				return tmp;
 
-				// default:throw new
-				// IllegalStateException("ID Missing Asignment or Parameters  Token: "+t.toString());
+				
 			}
 		}
-		// next();
+		
 		tmp = SimpleExpresion();
 
 		return tmp;
@@ -665,7 +659,7 @@ public class Parser {
 			c = c.sibling;
 			if (t.id != Constants.COMMA && t.id != Constants.RPAREN)
 				throw new IllegalStateException(
-						"Missign Comma in Argument list Token: " + t.toString());
+						"Missign Comma in Argument list Found Token =  " + t.toString());
 		}
 		next(); // consume )
 		return tmp;
@@ -673,14 +667,7 @@ public class Parser {
 
 	private TreeNode Argument() {
 		TreeNode tmp = new TreeNode();
-		/*
-		 * switch (t.id) { case Constants.ID: tmp=Variable(); break; case
-		 * Constants.NUMBER: tmp.lineNumber=t.lineNumber; tmp.nValue=t.number;
-		 * tmp.nodeType=t.id; tmp.sValue=t.lexeme; next();break; //default:
-		 * throw new
-		 * IllegalStateException("unexpected Token in argument Token: "
-		 * +t.toString()); }
-		 */
+		
 		tmp = Expresion();
 		return tmp;
 	}
@@ -690,10 +677,13 @@ public class Parser {
 		System.out.print("Input File Name for parser: ");
 		String infile = in.nextLine();
 		Parser p = new Parser(infile);
+		try{
 		p.root = p.Program();
+		
 		System.out.println("Complete!");
 		Navi n = new Navi();
 		n.preorder(p.root);
+		}catch(IllegalStateException e){System.out.println(e.getMessage());}
 	}
 
 }
