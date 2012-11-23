@@ -17,9 +17,9 @@ public class Symbol {
 	{
 		String out=new String();
 		out+=" ID: "+ID;
-		out+=" Line: "+line;
-		out+=" Etype: "+entryType;
-		out+=" Dtype: "+dataType;
+		//out+=" Line: "+line;
+		out+=" Entry type: "+Constants.getSting(entryType);
+		//out+=" Dtype: "+Constants.getSting(dataType);
 		out+=" Level: "+blockLevel;
 		out+=" Renam: "+rename;
 		
@@ -27,7 +27,7 @@ public class Symbol {
 		{ 
 			if(pramList.sibling!=null)out+=" PList != null";
 			else out+=" PList = null";
-			out+=" RType: "+returnType;
+			out+=" RType: "+Constants.getSting(returnType);
 		}
 		if (entryType==Constants.ARRAY)
 		 out+=" ArrayMax: "+arrayMax;

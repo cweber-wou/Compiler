@@ -7,7 +7,7 @@
 ******/
 
 int x[ 10 ];
-/*
+
 int minloc (int a[], int low, int high) {
 int i; int x; int k; 
 
@@ -38,17 +38,19 @@ void sort (int a[], int low, int high) {
   
   	}
   	
-  	*/
-  	int addone(int a)
+  	
+   
+  	int addone(void)
   	{
-  	return a+1;
+  	return 1;
   	}
  void main( void ) {
  int i;
  int test[ 10 ];
+ i=6;
+ 
+ 
  i=0;
- i=test[i+20+addone(30)];
- /*i=0;
  	while (i <10) {
  		read x[i];
  		i= i+1;
@@ -60,6 +62,6 @@ void sort (int a[], int low, int high) {
  		write (x[i]);
  		i=i+1;
  		
- 	}*/
+ 	}
  }
     

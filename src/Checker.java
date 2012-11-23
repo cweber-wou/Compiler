@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /*
  * Name: Chris Weber Date: fall2012 Class: compiler Design
  */
@@ -102,15 +104,18 @@ public class Checker {
 			if (s == null)
 				throw new IllegalStateException("Undefined Function Call: "
 						+ t.toString());
-			// else if (debug == 1)
-			// System.out.println("Function Lookup" + s.toString());// Look up
+//			 else if (debug == 1)
+//			 System.out.println("Function Lookup" + s.toString());// Look up
 			// function
+			if (t.C1.typeSpecifier == Constants.INT)
+				pass1(t.C1.sibling);
 			if (t.sibling != null)
 				pass1(t.sibling);
 			break;
 		case Constants.ARRAY: // then add else lookup
 		case Constants.VARIABLE:
 			if (level == 0) {
+				
 				s = new Symbol(t);
 				f = st.get(s);
 				if (f != null && f.blockLevel == s.blockLevel) {
@@ -130,15 +135,19 @@ public class Checker {
 					throw new IllegalStateException("Varible not found: "
 							+ t.toString());
 				else {
-					// if (debug == 1) {
-					// System.out.println("Lookup Sucess " + s.toString());
-					// }
+//					 if (debug == 1) {
+//					 System.out.println("Lookup Sucess " + s.toString());
+//					 }
+					
 					t.rename = s.rename;
 					t.nodeType = s.entryType;
+					t.typeSpecifier = s.dataType;
 					if (t.nodeType == Constants.ARRAY)
 						t.nValue = s.arrayMax;
 					else
 						t.nValue = s.value;
+					if (t.C1!=null && t.nodeType==Constants.VARIABLE) throw new IllegalStateException(
+							"Trying to Derefrence a Varible instead of a array  "+t.toString());
 				}
 			}
 
@@ -194,13 +203,18 @@ public class Checker {
 	public void pass6(TreeNode t) {
 
 		switch (t.nodeType) {
-		case Constants.ASSIGN:// things that contain expresions
-		case Constants.CALL:
 		case Constants.IF:
+		// things that contain expresions only in c1
+		case Constants.CALL:
 		case Constants.ARRAY:
 		case Constants.WHILE:
 		case Constants.WRITE:
+			if (hasVoid(t.C1))
+				throw new IllegalStateException(
+						"Void Function used in expression " + t.toString());
+			break;
 		case Constants.EQ:
+		case Constants.ASSIGN:// things that have expresions in c1 and c2
 		case Constants.LEQ:
 		case Constants.LS:
 		case Constants.GEQ:
@@ -211,11 +225,11 @@ public class Checker {
 		case Constants.PLUS:
 
 		case Constants.MINUS:
-			if (hasVoid(t.C1) || hasVoid(t.C2) || hasVoid(t.C3))
+			if (hasVoid(t.C1) || hasVoid(t.C2))
 				throw new IllegalStateException(
 						"Void Function used in expression " + t.toString());
 			break;
-		case Constants.ARGUMENTS:
+		case Constants.ARGUMENTS: // siblings are expresions
 			TreeNode x = t.sibling;
 			while (x != null) {
 				if (hasVoid(x))
@@ -248,25 +262,13 @@ public class Checker {
 		return hasVoid(t.C3) || hasVoid(t.C2) || hasVoid(t.C1);
 	}
 
-	// Array that is used in the same block must remain in bounds
+	// 7: Array that is used in the same block must remain in bounds
 	public void pass7(TreeNode t) {
-		Symbol s,f;
+		Symbol s, f;
 		TreeNode x;
 		switch (t.nodeType) {
 		case Constants.FUNCTION:
-//			// add function def
-//			s = new Symbol(t);
-//			f = st.get(s);
-//			if (f != null && f.blockLevel == s.blockLevel) {
-//				throw new IllegalStateException(
-//						"Tried to use same name twice in function "
-//								+ s.toString() + "\n -> " + f.toString());
-//			} else {
-//				s = st.store(s);
-//				t.rename = s.rename;
-//				if (debug == 1)
-//					System.out.println("Added Function: " + s.toString());
-//			}
+
 			if (t.C1.typeSpecifier != Constants.VOID) // add parameter list
 			{
 				x = t.C1.sibling;
@@ -276,7 +278,7 @@ public class Checker {
 				while (x != null) {
 					s = new Symbol(x);
 					s = st.store(s);
-					if (debug == 1)
+					if (debug == 7)
 						System.out.println("Added to ParameterList: "
 								+ s.toString());
 					x.rename = s.rename;
@@ -291,7 +293,7 @@ public class Checker {
 				throw new IllegalStateException(
 						"Error Missing Compound Statement in function");
 			count = st.Remove(level);
-			if (debug == 1)
+			if (debug == 7)
 				System.out.println("Function Level: " + level
 						+ " Number of items Removed from table " + count);
 			level--;
@@ -301,8 +303,6 @@ public class Checker {
 
 		case Constants.COMPOUND:
 			x = t.C1.sibling;
-			// if (x == null)
-			// System.out.println("Missing Compount Statement");
 			while (x != null) {
 				s = new Symbol(x);
 				f = st.get(s);
@@ -313,7 +313,7 @@ public class Checker {
 				}
 				s = st.store(s);
 				x.rename = s.rename;
-				if (debug == 1)
+				if (debug == 7)
 					System.out.println("Compound Define: " + s.toString());
 				x = x.sibling;
 			}
@@ -324,7 +324,7 @@ public class Checker {
 				throw new IllegalStateException(
 						"Missing Statement List in Compound");
 			count = st.Remove(level);
-			if (debug == 1)
+			if (debug == 7)
 				System.out.println("Compound Level " + level
 						+ " Number of items Removed from table " + count);
 			level--;
@@ -336,13 +336,11 @@ public class Checker {
 			if (s == null)
 				throw new IllegalStateException("Undefined Function Call: "
 						+ t.toString());
-			// else if (debug == 1)
-			// System.out.println("Function Lookup" + s.toString());// Look up
-			// function
 			if (t.sibling != null)
 				pass7(t.sibling);
 			break;
 		case Constants.ASSIGN:
+			pass7(t.C1);
 			switch (t.C2.nodeType) {
 			case Constants.NUMBER:
 			case Constants.PLUS:
@@ -358,85 +356,74 @@ public class Checker {
 					s.value = b;
 				} catch (ArrayCheck e) {
 
-				}break;
-			case Constants.ARRAY: pass7(t.C2);
-			}if (t.sibling != null)
+				}
+				break;
+			case Constants.ARRAY:
+				pass7(t.C2);
+			}
+			if (t.sibling != null)
 				pass7(t.sibling);
-			
+
 			break;
 		case Constants.ARRAY: // then add else lookup
-		case Constants.VARIABLE:
-//			if (level == 0) {
-//				s = new Symbol(t);
-//				f = st.get(s);
-//				if (f != null && f.blockLevel == s.blockLevel) {
-//					throw new IllegalStateException(
-//							"Tried to same name twice with a Global Variable  "
-//									+ s.toString() + "\n -> " + f.toString());
-//				}
-//				s = st.store(s);
-//				t.rename = s.rename;
-//				if (debug == 1)
-//					System.out.println("Global Var Define " + s.toString());
-//			} else 
-			{
-				f = new Symbol(t);
+		case Constants.VARIABLE: {
+			f = new Symbol(t);
 
-				s = st.get(f);
-				if (s == null)
-					throw new IllegalStateException("Varible not found: "
-							+ t.toString());
-				else {
-					 if (debug == 1) {
-					 System.out.println("Lookup Sucess " + s.toString());
-					 }
-					t.rename = s.rename;
-					t.nodeType = s.entryType;
-					if (t.nodeType == Constants.ARRAY)
-						t.nValue = s.arrayMax;
-					else
-						t.nValue = s.value;
+			s = st.get(f);
+			if (s == null)
+				throw new IllegalStateException("Varible not found: "
+						+ t.toString());
+			else {
+				if (debug == 7) {
+					System.out.println("Lookup Sucess " + s.toString());
 				}
-			if (t.nodeType==Constants.ARRAY){// not a define
-					s = st.get(t.rename); // pull array from symbol table
-					if (s.arrayMax != 0 && s.blockLevel == level-1&&s.blockLevel>0) {// array is not
-																		// a passed
-																		// parameter
-																		// and is in
-																		// the same
-																		// block
-																		// level
-						int b;
-						try {
-							b = eval(t.C1);
-							// What location are we trying to look for
-							if (b < 0)
-								throw new IllegalStateException(
-										"Negitive array lookup " + t.toString());// atempting
-																					// to
-																					// look
-																					// before
-																					// start
-																					// of
-																					// array
-							if (b > s.arrayMax)
-								throw new IllegalStateException(
-										"Lookup Past end of array" + t.toString());// attemting
-																					// to
-																					// look
-																					// after
-																					// end
-																					// of
-																					// array
-						} catch (ArrayCheck e) {// we had something that could not
-												// be evaluated
+				t.rename = s.rename;
+				t.nodeType = s.entryType;
+				if (t.nodeType == Constants.ARRAY)
+					t.nValue = s.arrayMax;
+				else
+					t.nValue = s.value;
+			}
+			if (t.nodeType == Constants.ARRAY) {// not a define
+				s = st.get(t.rename); // pull array from symbol table
+				if (s.arrayMax != 0 && s.blockLevel == level - 1
+						&& s.blockLevel > 0) {// array is not
+					// a passed
+					// parameter
+					// and is in
+					// the same
+					// block
+					// level
+					int b;
+					try {
+						b = eval(t.C1);
+						// What location are we trying to look for
+						if (b < 0)
+							throw new IllegalStateException(
+									"Negitive array lookup " + t.toString());// atempting
+																				// to
+																				// look
+																				// before
+																				// start
+																				// of
+																				// array
+						if (b > s.arrayMax-1)
+							throw new IllegalStateException(
+									"Lookup Past end of array" + t.toString());// attemting
+																				// to
+																				// look
+																				// after
+																				// end
+																				// of
+																				// array
+					} catch (ArrayCheck e) {// we had something that could not
+											// be evaluated
 
-						}
 					}
-					}
-
 				}
-			
+			}
+
+		}
 
 		default:
 
@@ -451,13 +438,11 @@ public class Checker {
 			// pass7 subnodes
 		}
 
-	
-
 	}
 
 	// used to check array out of bounds
 	public int eval(TreeNode t) throws ArrayCheck {
-		
+
 		switch (t.nodeType) {
 		case Constants.NUMBER:
 			return t.nValue;
@@ -477,8 +462,9 @@ public class Checker {
 								// effect of the evaluation
 	}
 
-	// An Array when used with an expression must have a location and a Variable
+	// 8:An Array when used with an expression must have a location and a Variable
 	// cannot be used as an array
+	// 9: Must pass valid parameters into function calls
 	public void pass8(TreeNode t) {
 		switch (t.nodeType) {
 		case Constants.ASSIGN:// things that contain expresions
@@ -486,6 +472,16 @@ public class Checker {
 		case Constants.ARRAY:
 		case Constants.WHILE:
 		case Constants.WRITE:
+			if (hasNoArrayLocation(t))
+				throw new IllegalStateException(
+						"No Array Location in expression " + t.toString());
+			if (t.C1 != null)
+				pass8(t.C1);
+			if (t.C2 != null&&t.C2.nodeType!=Constants.CALL)
+				pass8(t.C2);
+			if (t.sibling != null)
+				pass8(t.sibling);
+			break;
 		case Constants.EQ:
 		case Constants.LEQ:
 		case Constants.LS:
@@ -514,6 +510,58 @@ public class Checker {
 			if (t.sibling != null)
 				pass8(t.sibling);
 			break;
+		case Constants.CALL:
+			if (t.C1.sibling != null) // arugments in call
+			{
+				TreeNode a, b;
+				Symbol s = st.get(t.sValue); // Pull function def
+				if (s.pramList == null)
+					throw new IllegalStateException(
+							"Passed parameters to a void parameter function "
+									+ t.toString());
+				a = s.pramList.sibling;
+				b = t.C1.sibling;
+				while (a != null) {
+					switch (a.nodeType) {
+					case Constants.ARRAY:
+						if (b.nodeType != Constants.ARRAY)
+							throw new IllegalStateException(
+									"Invalid Parameter Function Expected Array "
+											+ b.toString());
+						if (b.C1 != null)
+							throw new IllegalStateException(
+									"Array dereferenced when Expecting Array "
+											+ b.toString());
+						break;
+					case Constants.VARIABLE:
+						switch (b.nodeType) {
+						case Constants.NUMBER:
+						case Constants.VARIABLE:
+						case Constants.CALL:
+							break; // Integer or number valid for integer
+									// Function ok becuse we already checked for
+									// Nulls
+						case Constants.ARRAY:
+							if (b.C1 == null)
+								throw new IllegalStateException(
+										"Array not dereferenced when Expecting int "
+												+ t.toString());
+						}
+					}
+
+					if (a.sibling == null ^ b.sibling == null) {
+						throw new IllegalStateException(
+								"Mismatched Number of Parameters in function call "
+										+ t.toString());
+					} else {
+						b = b.sibling;
+						a = a.sibling;
+					}
+
+				}
+			} else if (t.sibling != null)
+				pass8(t.sibling);
+
 		default:
 			if (t.C1 != null)
 				pass8(t.C1);
@@ -530,6 +578,7 @@ public class Checker {
 	private boolean hasNoArrayLocation(TreeNode t) {
 		if (t == null)
 			return false;
+		// if (t.nodeType==Constants.CALL)return false;
 		if (t.nodeType == Constants.ARRAY && (t.C1 == null && t.nValue == 0))
 			return true;
 		return hasNoArrayLocation(t.C1) || hasNoArrayLocation(t.C2)
@@ -546,19 +595,22 @@ public class Checker {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Checker c = new Checker("test");
-		try {
-			c.pass1(c.p.root);
-			c.pass4(c.p.root);
-			c.pass6(c.p.root);
-			c.level=0;
-			c.pass7(c.p.root);
-			c.pass8(c.p.root);
-			Navi n = new Navi();
-			//n.preorder(c.p.root);
-		} catch (IllegalStateException e) {
-			System.out.println(e.getMessage());
-		}
+		Scanner in = new Scanner(System.in);
+		System.out.print("Input File Name for parser: ");
+		String infile = in.nextLine();
+		Checker c = new Checker(infile);
+		 try {
+		c.pass1(c.p.root);
+		c.pass4(c.p.root);
+		c.pass6(c.p.root);
+		c.level = 0;
+		c.pass7(c.p.root);
+		c.pass8(c.p.root);
+		Navi n = new Navi();
+		n.preorder(c.p.root);
+		 } catch (IllegalStateException e) {
+		 System.out.println(e.getMessage());
+		 }
 	}
 
 }

@@ -35,7 +35,7 @@ public class TreeNode {
 		
 		o+=" Node Type: "+Constants.getSting(nodeType);
 		o+=" Line: "+lineNumber;
-		
+		o+=" TypeSpec: "+Constants.getSting(typeSpecifier);
 		o+=" Name: "+sValue;
 		if (nodeType == Constants.NUMBER|| nodeType == Constants.ARRAY) o+=" NumberValue: "+nValue;
 		
@@ -53,7 +53,7 @@ public class TreeNode {
 		}
 		o+=t+"Node Type: "+Constants.getSting(nodeType);
 		o+=t+"Line: "+lineNumber;
-		
+		if (this.typeSpecifier!=0) o+=t+"TypeSpec: "+Constants.getSting(typeSpecifier);
 		o+=t+"Name: "+sValue;
 		if (nodeType == Constants.NUMBER|| nodeType == Constants.ARRAY) o+=t+"NumberValue: "+nValue;
 		
